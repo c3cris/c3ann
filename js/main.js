@@ -141,13 +141,17 @@ Game.prototype.drawNetwork = function () {
   }
 
 
+  var max_id = indexOfMax(this.net.output[0]);
+
   for (var k = 0; k < this.net.output[0].length; k++) {
     var yy = y + 60 * k;
     network.beginPath();
     network.arc(450, yy, 25, 0, 2 * Math.PI);
     network.stroke();
     network.font = '10pt Arial';
-    network.fillStyle = 'black';
+
+    network.fillStyle = k == max_id ? 'red' : 'black';
+
     network.fillText(round(this.net.output[0][k], 2), 440, yy);
 
     network.fillText(k, 500, yy);
@@ -815,4 +819,20 @@ function round(n, digits) {
 
 
 
+function indexOfMax(arr) {
+  if (arr.length === 0) {
+    return -1;
+  }
 
+  var max = arr[0];
+  var maxIndex = 0;
+
+  for (var i = 1; i < arr.length; i++) {
+    if (arr[i] > max) {
+      maxIndex = i;
+      max = arr[i];
+    }
+  }
+
+  return maxIndex;
+}
