@@ -287,3 +287,7 @@ body{
 #env {
     border: 1px solid gray;
 }
+
+#tablestats td{
+    width:20px;
+}

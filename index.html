@@ -17,8 +17,10 @@
 
 
 
-        <canvas id="env" style="float:left;margin:0 10px;"> </canvas>
-        <div id="stats" style="float:left;margin:0 10px;"> </div>
+        <canvas id="env" style="float:left;margin:20px;"> </canvas>
+        <canvas id="network" width="600" height="5000" style="float:left;margin:20px;border:1px solid gray"> </canvas>
+        <div id="input" style="float:left;margin:20px;"> input </div>
+        <div id="stats" style="float:left;margin:20px;"> test </div>
 
 
 
@@ -26,8 +28,22 @@
         <script src="js/main.js"></script>
         <script>
 
-          game = new Game(20, 10, 30, 250);
+          game = new Game(10, 10, 50, 50);
           game.start();
+
+          //key options
+          window.onkeydown = function (event) {
+
+            var char = String.fromCharCode(event.keyCode);
+
+            if (char.toUpperCase() === "F") {
+                game.resetBoard = 1;
+            }
+            if (char.toUpperCase() === "T") {
+              game.train();
+            }
+          };
+
 
         </script>
     </body>
