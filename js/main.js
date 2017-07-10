@@ -163,7 +163,7 @@ Game.prototype.drawNetwork = function () {
     for (var n = 0; n < this.net.W1[0].length; n++) {
 
       network.beginPath();
-      network.lineWidth = Math.min(this.net.W1[k][n], 30);
+      network.lineWidth = Math.min(this.net.W1[k][n], 20);
       network.strokeStyle = "gray"; // Green path
       network.moveTo(75, yy);
       network.lineTo(225, y + n * 60);
@@ -179,7 +179,7 @@ Game.prototype.drawNetwork = function () {
     for (var n = 0; n < this.net.W2[0].length; n++) {
 
       network.beginPath();
-      network.lineWidth = Math.min(this.net.W2[k][n], 30);
+      network.lineWidth = Math.min(this.net.W2[k][n], 20);
       network.strokeStyle = "gray"; // Green path
       network.moveTo(275, yy);
       network.lineTo(425, y + n * 60);
@@ -247,7 +247,11 @@ Game.prototype.train = function () {
     }
 
 
-    if (k % 1000 === 0 ) console.log(k, errorRate);
+    if (k % 1000 === 0 )
+    {
+      this.drawNetwork();
+      console.log(k, errorRate);
+    }
 
 
     var k2_delta = [];
@@ -285,6 +289,7 @@ Game.prototype.train = function () {
 
   }
 
+  return alert("Done Training!");
 
 };
 
