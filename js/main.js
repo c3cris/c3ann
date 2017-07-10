@@ -21,8 +21,9 @@ function Game(w, h, size, speed) {
   this.pause = false;
   this.count = 0;
   this.mousePos = 0;
-  this.net = new ANN(this.board, 100, 10, 9);
+  this.net = new ANN(this.board, ( w - 2 ) * ( h - 2 ) , 20, 10);
   this.net.init();
+  this.input();
 
 
 }
@@ -74,10 +75,10 @@ Game.prototype.step = function () {
     this.board.reset();
   }
   if (this.change) {
-    this.board.input = [[].concat.apply([], this.board.board)];
-    console.log(this.board.input)
+    // this.board.input = [[].concat.apply([], this.board.board)];
+    // console.log(this.board.input)
 
-    // this.board.convalute([[1, 1, 1], [1, 1, 1], [1, 1, 1]]);
+    this.board.input = this.board.convalute([[1, 1, 1], [1, 1, 1], [1, 1, 1]]);
     this.net.forward();
     this.change = false;
   }
@@ -147,7 +148,9 @@ Game.prototype.drawNetwork = function () {
     network.stroke();
     network.font = '10pt Arial';
     network.fillStyle = 'black';
-    network.fillText(round(this.net.output[0][k], 4), 440, yy);
+    network.fillText(round(this.net.output[0][k], 2), 440, yy);
+
+    network.fillText(k, 500, yy);
 
   }
 
@@ -303,7 +306,7 @@ Game.prototype.backpropagate = function (actual) {
   // ];
 
 
-  for (var k = 0; k < 20; k++) {
+  for (var k = 0; k < 2; k++) {
 
     // this.board.input = test;
     this.net.forward();
@@ -411,32 +414,42 @@ Game.prototype.drawStats = function () {
 };
 
 
-Game.prototype.drawStats = function () {
+Game.prototype.input = function () {
 
-  var html = "<table id='tablestats'>";
+  var html = "<table id='checkboxtable'>";
 
-  for (var y = 0; y < this.board.input.length; y++) {
+  for (var y = 0; y < this.net.outputLayerSize; y++) {
 
     html += "<tr>";
     // for (var x = 0; x < this.board.board.length; x++) {
 
-      html += "<td>" +  JSON.stringify( this.board.input[y], 2, null) + "</td>";
+      html += "<td>" + "  <td><input type='radio' name='checkboxes' value='"+y+"'>"+y+"</td>" + "</td>";
 
     // }
     html += "<tr>";
   }
 
-  html += "</table>";
-  var temp_output  = op_matrix( this.net.output , function(x) { return  round(x, 5) } );
-
-  for (var y = 0; y < temp_output.length; y++) {
-
-    html += "y" + y + " = " + JSON.stringify(temp_output[y], 2, null) + "<br>";
+  html += "</table> <button id='backprop'>submit</button>";
 
 
-  }
+  this.inputDom.innerHTML = html;
+  var oLayers =  this.net.outputLayerSize;
+  var game = this;
 
-  this.statsDom.innerHTML = html;
+  $("#backprop").click(function() {
+    var input = $('input[name=checkboxes]:checked').val();
+    var expected = [];
+    for (var i = 0; i < oLayers; i++) {
+
+      expected.push(input == i ? 1 : 0);
+
+    }
+
+    console.log([expected]);
+    game.backpropagate([expected]);
+
+  });
+
 
 };
 
@@ -515,7 +528,9 @@ function Board(width, height) {
   this.board = [];
   this.convaluted = [];
   this.reset();
-  this.input = [[].concat.apply([], this.board)];
+  // this.input = [[].concat.apply([], this.board)];
+  this.input = this.convalute([[1, 1, 1], [1, 1, 1], [1, 1, 1]]);
+
 }
 
 Board.prototype.reset = function () {
@@ -551,15 +566,16 @@ Board.prototype.convalute = function (weightsArray) {
 
   for (var y = 0; y < height; y++)
   {
-    if (height > y) this.convaluted.push([]);
+    // if (height > y) this.convaluted.push([]);
 
     for (var x = 0; x < width; x++) {
       box = getBox(this.board, weightsArray.length, x, y);
       prod = dot_product(weights, box);
-      this.convaluted[y].push(prod / 9);
+      this.convaluted.push(prod / 9);
 
     }
   }
+  return [this.convaluted];
 };
 
 // 4 , 4 , 3
@@ -601,6 +617,28 @@ ANN.prototype.randn = function (h, w) {
   return arr;
 };
 
+ANN.prototype.load = function (str) {
+
+  var obj = JSON.parse(str);
+
+  this.W1 = obj.W1
+  this.W2 = obj.W2
+
+
+}
+
+ANN.prototype.save = function () {
+
+  var obj = {};
+
+  obj.W1 = this.W1;
+  obj.W2 = this.W2;
+
+  return JSON.stringify(obj);
+
+
+
+}
 ANN.prototype.forward = function () {
 
 
