@@ -353,7 +353,7 @@ Game.prototype.backpropagate = function (actual) {
 
 
 
-    k2_delta =  mul_matries(error ,  op_matrix(this.net.output , function(x){ return sigmoidPrime(x);}));
+    k2_delta =  mul_matries(op_matrix(error, function(x){ return x * this.net.trainRate;} ,  op_matrix(this.net.output , function(x){ return sigmoidPrime(x);}));
 
 
 
@@ -601,6 +601,7 @@ function ANN(board, input, hidden, output) {
   this.hiddenLayerSize = hidden;
 
   this.outputLayerSize = output;
+  this.trainRate = .5;
   this.board = board;
   this.output = [];
 
@@ -690,7 +691,7 @@ function sigmoid(x) {
 
 function sigmoidPrime(x) {
 // Gradient of sigmoid
-  return Math.exp(-x) / (1 + Math.pow(Math.exp(-x), 2));
+  return Math.exp(-x) / Math.pow(1 + Math.exp(-x), 2);
 }
 
 
