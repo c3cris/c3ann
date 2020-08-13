@@ -320,15 +320,15 @@ Game.prototype.backpropagate = function (actual) {
   // ];
 
 
-  for (var k = 0; k < 2; k++) {
+  //for (var k = 0; k < 2; k++) {
 
     // this.board.input = test;
-    this.net.forward();
-
+    //this.net.forward();
+	var rate = this.net.trainRate;
     var error = sub_matries(actual, this.net.output);
 	trainingRate = function(x){ 
 		if(x <= 0 ){
-			return x * (rate / 2);
+			return x * (rate / 1.5);
 		}
 		return x * rate;
 
@@ -357,7 +357,7 @@ Game.prototype.backpropagate = function (actual) {
 
 
     var k2_delta = [];
-    var rate = this.net.trainRate;
+    
 
 
     k2_delta =  mul_matries(error,  op_matrix(this.net.output , function(x){ return sigmoidPrime(x);}));
@@ -389,7 +389,7 @@ Game.prototype.backpropagate = function (actual) {
     this.net.W1 =  add_matries(this.net.W1, multiply_matrix(transpose(this.board.input), k1_delta));
 
 
-  }
+  //}
 
 
 };
@@ -608,7 +608,7 @@ function ANN(board, input, hidden, output) {
   this.hiddenLayerSize = hidden;
 
   this.outputLayerSize = output;
-  this.trainRate = .5;
+  this.trainRate = .2;
   this.board = board;
   this.output = [];
 
