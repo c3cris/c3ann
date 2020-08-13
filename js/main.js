@@ -323,7 +323,7 @@ Game.prototype.backpropagate = function (actual) {
   //for (var k = 0; k < 2; k++) {
 
     // this.board.input = test;
-    //this.net.forward();
+    this.net.forward();
 	var rate = this.net.trainRate;
     var error = sub_matries(actual, this.net.output);
 	trainingRate = function(x){ 
