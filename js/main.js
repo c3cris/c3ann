@@ -327,11 +327,7 @@ Game.prototype.backpropagate = function (actual) {
 	var rate = this.net.trainRate;
     var error = sub_matries(actual, this.net.output);
 	trainingRate = function(x){ 
-		if(x <= 0 ){
-			return x * (rate / 1.5);
-		}
 		return x * rate;
-
 	}
 
 
