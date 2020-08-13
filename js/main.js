@@ -353,7 +353,7 @@ Game.prototype.backpropagate = function (actual) {
 
 
 
-    k2_delta =  mul_matries(op_matrix(error, function(x){ return x * this.net.trainRate;} ,  op_matrix(this.net.output , function(x){ return sigmoidPrime(x);}));
+    k2_delta =  mul_matries(op_matrix(error, function(x){ return x * this.net.trainRate;}) ,  op_matrix(this.net.output , function(x){ return sigmoidPrime(x);}));
 
 
 
