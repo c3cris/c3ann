@@ -326,6 +326,13 @@ Game.prototype.backpropagate = function (actual) {
     this.net.forward();
 
     var error = sub_matries(actual, this.net.output);
+	trainingRate = function(x){ 
+		if(x <= 0 ){
+			return x * (rate / 2);
+		}
+		return x * rate;
+
+	}
 
 
     total_sum = [];
@@ -351,10 +358,9 @@ Game.prototype.backpropagate = function (actual) {
 
     var k2_delta = [];
     var rate = this.net.trainRate;
-	trainingRate = function(x){ return x * rate;}
 
 
-    k2_delta =  mul_matries(op_matrix(error,trainingRate) ,  op_matrix(this.net.output , function(x){ return sigmoidPrime(x);}));
+    k2_delta =  mul_matries(error,  op_matrix(this.net.output , function(x){ return sigmoidPrime(x);}));
 
 
 
